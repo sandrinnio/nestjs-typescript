@@ -1,29 +1,20 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import User from './user.entity';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(User)
-    private usersRepository: Repository<User>,
-  ) {}
+  constructor(private readonly usersRepository: UsersRepository) {}
 
-  async getByEmail(email: string) {
-    const user = await this.usersRepository.findOne({ email });
-    if (!user) {
-      throw new HttpException(
-        'User with this email does not exist',
-        HttpStatus.NOT_FOUND,
-      );
-    }
-    return user;
+  getById(userId: number) {
+    return this.usersRepository.getById(userId);
   }
 
-  create(userData: CreateUserDto) {
-    const newUser = this.usersRepository.create(userData);
-    return this.usersRepository.save(newUser);
+  getByEmail(email: string) {
+    return this.usersRepository.getByEmail(email);
+  }
+
+  createUser(userData: CreateUserDto) {
+    return this.usersRepository.create(userData);
   }
 }

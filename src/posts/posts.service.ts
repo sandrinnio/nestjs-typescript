@@ -1,47 +1,29 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { Post } from './post.entity';
+import { PostsRepository } from './posts.repository';
 
 @Injectable()
 export class PostsService {
-  constructor(
-    @InjectRepository(Post)
-    private postsRepository: Repository<Post>,
-  ) {}
+  constructor(private readonly postsRepository: PostsRepository) {}
 
   getAllPosts() {
-    return this.postsRepository.find();
+    return this.postsRepository.getAllPosts();
   }
 
-  async getPostById(id: number) {
-    const post = await this.postsRepository.findOne(id);
-    if (!post) {
-      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
-    }
-    return post;
-  }
-
-  async updatePost(id: number, post: UpdatePostDto) {
-    await this.postsRepository.update(id, post);
-    const updatedPost = await this.postsRepository.findOne(id);
-    if (!updatedPost) {
-      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
-    }
-    return updatedPost;
+  getPostById(id: number) {
+    return this.postsRepository.getPostById(id);
   }
 
   createPost(post: CreatePostDto) {
-    const newPost = this.postsRepository.create(post);
-    return this.postsRepository.save(newPost);
+    return this.postsRepository.create(post);
   }
 
-  async deletePost(id: number): Promise<void> {
-    const deleteResponse = await this.postsRepository.delete(id);
-    if (!deleteResponse.affected) {
-      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
-    }
+  updatePost(id: number, post: UpdatePostDto) {
+    return this.postsRepository.update(id, post);
+  }
+
+  deletePost(id: number) {
+    return this.postsRepository.delete(id);
   }
 }
