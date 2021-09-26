@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import User from '../users/entities/user.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostsRepository } from './posts.repository';
@@ -15,8 +16,8 @@ export class PostsService {
     return this.postsRepository.getPostById(id);
   }
 
-  createPost(post: CreatePostDto) {
-    return this.postsRepository.create(post);
+  createPost(post: CreatePostDto, user: User) {
+    return this.postsRepository.create(post, user);
   }
 
   updatePost(id: number, post: UpdatePostDto) {
