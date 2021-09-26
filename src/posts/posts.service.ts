@@ -12,7 +12,7 @@ export class PostsService {
     return this.postsRepository.getAllPosts();
   }
 
-  getPostById(id: number) {
+  getPostById(id: string) {
     return this.postsRepository.getPostById(id);
   }
 
@@ -20,11 +20,11 @@ export class PostsService {
     return this.postsRepository.create(post, user);
   }
 
-  updatePost(id: number, post: UpdatePostDto) {
+  updatePost(id: string, post: UpdatePostDto) {
     return this.postsRepository.update(id, post);
   }
 
-  deletePost(id: number) {
+  deletePost(id: string) {
     return this.postsRepository.delete(id);
   }
 }

@@ -10,7 +10,7 @@ export class UsersRepository {
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
   ) {}
 
-  async getById(id: number) {
+  async getById(id: string) {
     const user = await this.usersRepository.findOne({ id });
     if (!user) {
       throw new HttpException(
@@ -35,5 +35,9 @@ export class UsersRepository {
   create(userData: CreateUserDto) {
     const newUser = this.usersRepository.create(userData);
     return this.usersRepository.save(newUser);
+  }
+
+  async addAvatar(user: User, avatar: { key: string; url: string }) {
+    await this.usersRepository.update(user.id, { ...user, avatar });
   }
 }

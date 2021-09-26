@@ -9,11 +9,11 @@ export class CategoriesService {
     return this.categoriesRepository.getAllCategories();
   }
 
-  getCategoryById(id: number) {
+  getCategoryById(id: string) {
     return this.categoriesRepository.getCategoryById(id);
   }
 
-  updateCategory(id: number, category: { name: string }) {
+  updateCategory(id: string, category: { name: string }) {
     return this.categoriesRepository.updateCategory(id, category);
   }
 }

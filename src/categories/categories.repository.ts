@@ -14,7 +14,7 @@ export class CategoriesRepository {
     return this.categoriesRepository.find({ relations: ['posts'] });
   }
 
-  async getCategoryById(id: number) {
+  async getCategoryById(id: string) {
     const category = await this.categoriesRepository.findOne(id, {
       relations: ['posts'],
     });
@@ -24,7 +24,7 @@ export class CategoriesRepository {
     return category;
   }
 
-  async updateCategory(id: number, category: { name: string }) {
+  async updateCategory(id: string, category: { name: string }) {
     await this.categoriesRepository.update(id, category);
     const updatedCategory = await this.categoriesRepository.findOne(id, {
       relations: ['posts'],

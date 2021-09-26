@@ -3,8 +3,8 @@ import { Post } from '../../posts/entities/post.entity';
 
 @Entity()
 class Category {
-  @PrimaryGeneratedColumn()
-  public id: number;
+  @PrimaryGeneratedColumn('uuid')
+  public id: string;
 
   @Column()
   public name: string;

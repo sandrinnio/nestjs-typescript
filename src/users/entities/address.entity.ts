@@ -3,8 +3,8 @@ import User from './user.entity';
 
 @Entity()
 class Address {
-  @PrimaryGeneratedColumn()
-  public id: number;
+  @PrimaryGeneratedColumn('uuid')
+  public id: string;
 
   @Column()
   public street: string;

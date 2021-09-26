@@ -21,7 +21,7 @@ export class AuthenticationService {
     return user;
   }
 
-  getCookieWithJwtToken(userId: number) {
+  getCookieWithJwtToken(userId: string) {
     const payload: TokenPayload = { userId };
     const token = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_SECRET'),

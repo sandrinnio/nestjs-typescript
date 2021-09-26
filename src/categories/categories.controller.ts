@@ -11,12 +11,12 @@ export class CategoriesController {
   }
 
   @Get(':id')
-  getCategoryById(id: number) {
+  getCategoryById(id: string) {
     return this.categoriesService.getCategoryById(id);
   }
 
   @Put(':id')
-  updateCategory(@Param('id') id: number, @Body() category: { name: string }) {
+  updateCategory(@Param('id') id: string, @Body() category: { name: string }) {
     return this.categoriesService.updateCategory(id, category);
   }
 }

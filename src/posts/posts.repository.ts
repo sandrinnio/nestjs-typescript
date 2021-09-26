@@ -17,7 +17,7 @@ export class PostsRepository {
     return this.postsRepository.find();
   }
 
-  async getPostById(id: number) {
+  async getPostById(id: string) {
     const post = await this.postsRepository.findOne(id);
     if (!post) {
       throw new PostNotFoundException(id);
@@ -30,7 +30,7 @@ export class PostsRepository {
     return this.postsRepository.save(newPost);
   }
 
-  async update(id: number, post: UpdatePostDto) {
+  async update(id: string, post: UpdatePostDto) {
     await this.postsRepository.update(id, post);
     const updatedPost = await this.postsRepository.findOne(id);
     if (!updatedPost) {
@@ -39,7 +39,7 @@ export class PostsRepository {
     return updatedPost;
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     const deleteResponse = await this.postsRepository.delete(id);
     if (!deleteResponse.affected) {
       throw new PostNotFoundException(id);
