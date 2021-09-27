@@ -37,6 +37,10 @@ export class UsersRepository {
     return this.usersRepository.save(newUser);
   }
 
+  getAllPrivateFiles(userId: string) {
+    return this.usersRepository.findOne(userId, { relations: ['files'] });
+  }
+
   async addAvatar(user: User, avatar: { key: string; url: string }) {
     await this.usersRepository.update(user.id, { ...user, avatar });
   }

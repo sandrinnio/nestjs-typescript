@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { S3 } from 'aws-sdk';
 import { InjectAwsService } from '../aws/decorators/aws-service.decorator';
+import User from '../users/entities/user.entity';
 import { FilesRepository } from './files.repository';
 
 @Injectable()
@@ -38,5 +39,45 @@ export class FilesService {
       })
       .promise();
     await this.filesRepository.deletePublicFile(fileId);
+  }
+
+  async getPrivateFile(fileId: string) {
+    const privateFile = await this.filesRepository.getPrivateFile(fileId);
+    if (!privateFile) {
+      throw new NotFoundException(fileId);
+    }
+    const stream = this.s3
+      .getObject({
+        Bucket: this.configService.get('AWS_PRIVATE_BUCKET_NAME'),
+        Key: privateFile.key,
+      })
+      .createReadStream();
+    return {
+      stream,
+      info: privateFile,
+    };
+  }
+
+  async uploadPrivateFile(dataBuffer: Buffer, owner: User, filename: string) {
+    const uploadResult = await this.s3
+      .upload({
+        Bucket: this.configService.get('AWS_PRIVATE_BUCKET_NAME'),
+        Body: dataBuffer,
+        Key: `${Date.now()}-${filename}`,
+      })
+      .promise();
+    const newPrivateFile = await this.filesRepository.createPrivateFile(
+      uploadResult.Location,
+      uploadResult.Key,
+      owner,
+    );
+    return newPrivateFile;
+  }
+
+  generatePresignedUrl(key: string) {
+    return this.s3.getSignedUrlPromise('getObject', {
+      Bucket: this.configService.get('AWS_PRIVATE_BUCKET_NAME'),
+      Key: key,
+    });
   }
 }

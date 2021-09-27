@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { FilesService } from '../files/files.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import User from './entities/user.entity';
@@ -21,6 +25,29 @@ export class UsersService {
 
   createUser(userData: CreateUserDto) {
     return this.usersRepository.create(userData);
+  }
+
+  async getPrivateFile(fileId: string, ownerId: string) {
+    const file = await this.filesService.getPrivateFile(fileId);
+    if (file.info.owner.id !== ownerId) {
+      throw new UnauthorizedException();
+    }
+    return file;
+  }
+
+  async getAllPrivateFilesPresignedURLs(userId: string) {
+    const userWithFiles = await this.usersRepository.getAllPrivateFiles(userId);
+    if (!userWithFiles.files) {
+      throw new NotFoundException('User does not exist');
+    }
+    const generatedPresignedUrls = userWithFiles.files.map((file) =>
+      this.filesService.generatePresignedUrl(file.key),
+    );
+    return Promise.all(generatedPresignedUrls);
+  }
+
+  addPrivateFile(user: User, fileBuffer: Buffer, filename: string) {
+    return this.filesService.uploadPrivateFile(fileBuffer, user, filename);
   }
 
   async addAvatar(user: User, imageBuffer: Buffer, fileName: string) {
