@@ -8,6 +8,7 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { CategoriesModule } from './categories/categories.module';
 import { FilesModule } from './files/files.module';
 import { AwsModule } from './aws/aws.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { AwsModule } from './aws/aws.module';
     AuthenticationModule,
     CategoriesModule,
     FilesModule,
+    SearchModule,
   ],
   controllers: [],
   providers: [],

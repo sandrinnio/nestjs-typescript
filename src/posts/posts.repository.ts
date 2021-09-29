@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import User from '../users/entities/user.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
@@ -23,6 +23,12 @@ export class PostsRepository {
       throw new PostNotFoundException(id);
     }
     return post;
+  }
+
+  getPostsByIds(ids: string[]) {
+    return this.postsRepository.find({
+      where: { id: In(ids) },
+    });
   }
 
   create(post: CreatePostDto, user: User) {

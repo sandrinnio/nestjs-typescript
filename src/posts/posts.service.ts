@@ -2,11 +2,15 @@ import { Injectable } from '@nestjs/common';
 import User from '../users/entities/user.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import PostsSearchService from './posts-search.service';
 import { PostsRepository } from './posts.repository';
 
 @Injectable()
 export class PostsService {
-  constructor(private readonly postsRepository: PostsRepository) {}
+  constructor(
+    private readonly postsRepository: PostsRepository,
+    private readonly searchService: PostsSearchService,
+  ) {}
 
   getAllPosts() {
     return this.postsRepository.getAllPosts();
@@ -16,15 +20,31 @@ export class PostsService {
     return this.postsRepository.getPostById(id);
   }
 
-  createPost(post: CreatePostDto, user: User) {
-    return this.postsRepository.create(post, user);
+  async searchForPosts(text: string) {
+    const results = await this.searchService.search(text);
+    const ids = results.map(({ id }) => id);
+    if (!ids.length) {
+      return [];
+    }
+    return this.postsRepository.getPostsByIds(ids);
   }
 
-  updatePost(id: string, post: UpdatePostDto) {
-    return this.postsRepository.update(id, post);
+  async createPost(post: CreatePostDto, user: User) {
+    const newPost = await this.postsRepository.create(post, user);
+    await this.searchService.indexPost(newPost);
+    return newPost;
   }
 
-  deletePost(id: string) {
-    return this.postsRepository.delete(id);
+  async updatePost(id: string, post: UpdatePostDto) {
+    const updatedPost = await this.postsRepository.update(id, post);
+    await this.searchService.update(id, updatedPost);
+    return updatedPost;
+  }
+
+  async deletePost(id: string) {
+    await Promise.all([
+      this.postsRepository.delete(id),
+      this.searchService.delete(id),
+    ]);
   }
 }
