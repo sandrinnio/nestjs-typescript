@@ -3,6 +3,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
 import { FilesService } from '../files/files.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import User from './entities/user.entity';
@@ -23,8 +24,16 @@ export class UsersService {
     return this.usersRepository.getByEmail(email);
   }
 
-  createUser(userData: CreateUserDto) {
-    return this.usersRepository.create(userData);
+  async getUserFromRefreshToken(userId: string, token: string) {
+    const user = await this.getById(userId);
+    const isRefreshTokenMatches = await bcrypt.compare(
+      token,
+      user.currentHashedRefreshToken,
+    );
+    if (!isRefreshTokenMatches) {
+      throw new UnauthorizedException(userId);
+    }
+    return user;
   }
 
   async getPrivateFile(fileId: string, ownerId: string) {
@@ -46,6 +55,14 @@ export class UsersService {
     return Promise.all(generatedPresignedUrls);
   }
 
+  createUser(userData: CreateUserDto) {
+    return this.usersRepository.create(userData);
+  }
+
+  setJwtRefreshToken(userId: string, token: string) {
+    return this.usersRepository.setJwtRefreshToken(userId, token);
+  }
+
   addPrivateFile(user: User, fileBuffer: Buffer, filename: string) {
     return this.filesService.uploadPrivateFile(fileBuffer, user, filename);
   }
@@ -65,5 +82,9 @@ export class UsersService {
       await this.usersRepository.addAvatar(user, null);
       await this.filesService.deletePublicFile(user.avatar.id);
     }
+  }
+
+  removeJwtRefreshToken(userId: string) {
+    return this.usersRepository.removeJwtRefreshToken(userId);
   }
 }

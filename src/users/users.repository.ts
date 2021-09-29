@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import User from './entities/user.entity';
 
@@ -32,16 +33,29 @@ export class UsersRepository {
     return user;
   }
 
+  getAllPrivateFiles(userId: string) {
+    return this.usersRepository.findOne(userId, { relations: ['files'] });
+  }
+
   create(userData: CreateUserDto) {
     const newUser = this.usersRepository.create(userData);
     return this.usersRepository.save(newUser);
   }
 
-  getAllPrivateFiles(userId: string) {
-    return this.usersRepository.findOne(userId, { relations: ['files'] });
+  async setJwtRefreshToken(userId: string, token: string) {
+    const hashedToken = await bcrypt.hash(token, 10);
+    await this.usersRepository.update(userId, {
+      currentHashedRefreshToken: hashedToken,
+    });
   }
 
   async addAvatar(user: User, avatar: { key: string; url: string }) {
     await this.usersRepository.update(user.id, { ...user, avatar });
+  }
+
+  removeJwtRefreshToken(userId: string) {
+    return this.usersRepository.update(userId, {
+      currentHashedRefreshToken: null,
+    });
   }
 }
