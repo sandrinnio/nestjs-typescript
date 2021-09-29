@@ -5,6 +5,7 @@ import {
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
+  RelationId,
 } from 'typeorm';
 import Category from '../../categories/entities/category.entity';
 import User from '../../users/entities/user.entity';
@@ -20,8 +21,14 @@ export class Post {
   @Column()
   public content: string;
 
+  @Column({ type: 'text', array: true, nullable: true })
+  public keywords?: string[];
+
   @ManyToOne(() => User, (author: User) => author.posts, { eager: true })
   public author: User;
+
+  @RelationId((post: Post) => post.author)
+  public authorId?: string;
 
   @ManyToMany(() => Category, (category: Category) => category.posts, {
     eager: true,

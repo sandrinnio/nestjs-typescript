@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import User from '../users/entities/user.entity';
+import { PaginationParams } from '../utils';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Post } from './entities/post.entity';
@@ -13,8 +14,15 @@ export class PostsRepository {
     @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
   ) {}
 
-  getAllPosts() {
-    return this.postsRepository.find();
+  getAllPosts(pagination: PaginationParams) {
+    const { offset, limit } = pagination;
+    return this.postsRepository.findAndCount({
+      order: {
+        id: 'ASC',
+      },
+      skip: offset,
+      take: limit,
+    });
   }
 
   async getPostById(id: string) {
@@ -29,6 +37,13 @@ export class PostsRepository {
     return this.postsRepository.find({
       where: { id: In(ids) },
     });
+  }
+
+  getPostsByKeywords(keyword: string) {
+    return this.postsRepository.query(
+      `SELECT * from post WHERE $1 = ANY(keywords)`,
+      [keyword],
+    );
   }
 
   create(post: CreatePostDto, user: User) {

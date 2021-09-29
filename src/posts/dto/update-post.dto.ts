@@ -6,12 +6,10 @@ export class UpdatePostDto {
   id?: string;
 
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   content?: string;
 
   @IsString()
-  @IsNotEmpty()
   @IsOptional()
   title?: string;
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import User from '../users/entities/user.entity';
+import { PaginationParams } from '../utils';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import PostsSearchService from './posts-search.service';
@@ -12,16 +13,20 @@ export class PostsService {
     private readonly searchService: PostsSearchService,
   ) {}
 
-  getAllPosts() {
-    return this.postsRepository.getAllPosts();
+  getAllPosts(pagination: PaginationParams) {
+    return this.postsRepository.getAllPosts(pagination);
   }
 
   getPostById(id: string) {
     return this.postsRepository.getPostById(id);
   }
 
-  async searchForPosts(text: string) {
-    const results = await this.searchService.search(text);
+  getPostsByKeywords(keywords: string) {
+    return this.postsRepository.getPostsByKeywords(keywords);
+  }
+
+  async searchForPosts(text: string, pagination: PaginationParams) {
+    const { results } = await this.searchService.search(text, pagination);
     const ids = results.map(({ id }) => id);
     if (!ids.length) {
       return [];

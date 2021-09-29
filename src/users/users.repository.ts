@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import User from './entities/user.entity';
@@ -51,6 +51,10 @@ export class UsersRepository {
 
   async addAvatar(user: User, avatar: { key: string; url: string }) {
     await this.usersRepository.update(user.id, { ...user, avatar });
+  }
+
+  deleteAvatarWithQueryRunner(userId: string, queryRunner: QueryRunner) {
+    return queryRunner.manager.update(User, userId, { avatar: null });
   }
 
   removeJwtRefreshToken(userId: string) {
