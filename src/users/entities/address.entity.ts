@@ -4,19 +4,19 @@ import User from './user.entity';
 @Entity()
 class Address {
   @PrimaryGeneratedColumn('uuid')
-  public id: string;
+  id?: string;
 
   @Column()
-  public street: string;
+  street: string;
 
   @Column()
-  public city: string;
+  city: string;
 
   @Column()
-  public country: string;
+  country: string;
 
   @OneToOne(() => User, (user: User) => user.address)
-  public user: User;
+  user: User;
 }
 
 export default Address;

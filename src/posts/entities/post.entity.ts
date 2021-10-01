@@ -4,36 +4,43 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   RelationId,
 } from 'typeorm';
 import Category from '../../categories/entities/category.entity';
+import Comment from '../../comments/entities/comment.entity';
 import User from '../../users/entities/user.entity';
 
 @Entity()
-export class Post {
+class Post {
   @PrimaryGeneratedColumn('uuid')
-  public id: string;
+  id?: string;
 
   @Column()
-  public title: string;
+  title: string;
 
   @Column()
-  public content: string;
+  content: string;
 
   @Column({ type: 'text', array: true, nullable: true })
-  public keywords?: string[];
+  keywords?: string[];
 
   @ManyToOne(() => User, (author: User) => author.posts, { eager: true })
-  public author: User;
+  author: User;
 
   @RelationId((post: Post) => post.author)
-  public authorId?: string;
+  authorId?: string;
 
   @ManyToMany(() => Category, (category: Category) => category.posts, {
     eager: true,
     cascade: true,
   })
   @JoinTable({ name: 'posts_categories' })
-  public categories?: Category[];
+  categories?: Category[];
+
+  @OneToMany(() => Comment, (comment: Comment) => comment.post, { eager: true })
+  comments?: Comment[];
 }
+
+export default Post;

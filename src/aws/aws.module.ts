@@ -8,7 +8,7 @@ import { getAwsServiceToken } from './utils/aws.utils';
 @Global()
 @Module({})
 export class AwsModule {
-  public static forRootAsync(options: IAwsModuleAsyncOptions): DynamicModule {
+  static forRootAsync(options: IAwsModuleAsyncOptions): DynamicModule {
     return {
       module: AwsModule,
       imports: options.imports,
@@ -17,7 +17,7 @@ export class AwsModule {
     };
   }
 
-  public static forFeature(...services: unknown[]): DynamicModule {
+  static forFeature(...services: unknown[]): DynamicModule {
     const providers = services.map(this.createAwsServiceProviders);
     return {
       module: AwsModule,

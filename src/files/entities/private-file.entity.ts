@@ -4,16 +4,16 @@ import User from '../../users/entities/user.entity';
 @Entity()
 class PrivateFile {
   @PrimaryGeneratedColumn('uuid')
-  public id: number;
+  id?: string;
 
   @Column()
-  public url: string;
+  url: string;
 
   @Column()
-  public key: string;
+  key: string;
 
   @ManyToOne(() => User, (user: User) => user.files)
-  public owner: User;
+  owner: User;
 }
 
 export default PrivateFile;

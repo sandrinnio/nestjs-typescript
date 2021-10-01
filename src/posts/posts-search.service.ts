@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { PaginationParams } from '../utils';
-import { Post } from './entities/post.entity';
+import Post from './entities/post.entity';
 import { PostSearchBody } from './interfaces/post-search-body.interface';
 import { PostsSearchResult } from './interfaces/post-search-result.interface';
 

@@ -9,12 +9,15 @@ import { CategoriesModule } from './categories/categories.module';
 import { FilesModule } from './files/files.module';
 import { AwsModule } from './aws/aws.module';
 import { SearchModule } from './search/search.module';
+import { SubscribersModule } from './subscribers/subscribers.module';
+import { CommentsModule } from './comments/comments.module';
 
 @Module({
   imports: [
     PostsModule,
     ConfigModule.forRoot({
       validationSchema: Joi.object({
+        // NODE_ENV: Joi.string().required(),
         POSTGRES_HOST: Joi.string().required(),
         POSTGRES_PORT: Joi.number().required(),
         POSTGRES_USER: Joi.string().required(),
@@ -29,6 +32,13 @@ import { SearchModule } from './search/search.module';
         AWS_SECRET_ACCESS_KEY: Joi.string().required(),
         AWS_PUBLIC_BUCKET_NAME: Joi.string().required(),
         PORT: Joi.number(),
+        ELASTICSEARCH_NODE: Joi.string().required(),
+        ELASTICSEARCH_USERNAME: Joi.string().required(),
+        ELASTICSEARCH_PASSWORD: Joi.string().required(),
+        RABBITMQ_USER: Joi.string().required(),
+        RABBITMQ_PASSWORD: Joi.string().required(),
+        RABBITMQ_HOST: Joi.string().required(),
+        RABBITMQ_QUEUE_NAME: Joi.string().required(),
       }),
     }),
     AwsModule.forRootAsync({
@@ -46,6 +56,8 @@ import { SearchModule } from './search/search.module';
     CategoriesModule,
     FilesModule,
     SearchModule,
+    SubscribersModule,
+    CommentsModule,
   ],
   controllers: [],
   providers: [],

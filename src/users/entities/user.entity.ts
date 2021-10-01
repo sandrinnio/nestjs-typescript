@@ -8,47 +8,47 @@ import {
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import Address from './address.entity';
-import { Post } from '../../posts/entities/post.entity';
+import Post from '../../posts/entities/post.entity';
 import PublicFile from '../../files/entities/public-file.entity';
 import PrivateFile from '../../files/entities/private-file.entity';
 
 @Entity()
 class User {
   @PrimaryGeneratedColumn('uuid')
-  public id: string;
+  id?: string;
 
   @Column({ unique: true })
-  public email: string;
+  email: string;
 
   @Column()
-  public name: string;
+  name: string;
 
   @Column()
   @Exclude()
-  public password: string;
+  password: string;
 
   @Column({
     nullable: true,
   })
   @Exclude()
-  public currentHashedRefreshToken?: string;
+  currentHashedRefreshToken?: string;
 
   @OneToOne(() => Address, { eager: true, cascade: true })
   @JoinColumn({ name: 'address_id', referencedColumnName: 'id' })
-  public address: Address;
+  address: Address;
 
   @OneToMany(() => Post, (post: Post) => post.author)
-  public posts: Post[];
+  posts: Post[];
 
   @OneToOne(() => PublicFile, {
     eager: true,
     nullable: true,
   })
   @JoinColumn({ name: 'avatar_id', referencedColumnName: 'id' })
-  public avatar?: PublicFile;
+  avatar?: PublicFile;
 
   @OneToMany(() => PrivateFile, (files: PrivateFile) => files.owner)
-  public files: PrivateFile[];
+  files: PrivateFile[];
 }
 
 export default User;

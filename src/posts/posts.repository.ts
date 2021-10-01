@@ -5,7 +5,7 @@ import User from '../users/entities/user.entity';
 import { PaginationParams } from '../utils';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { Post } from './entities/post.entity';
+import Post from './entities/post.entity';
 import { PostNotFoundException } from './exception/post-not-found.exception';
 
 @Injectable()
