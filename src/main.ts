@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
+import { runInCluster } from './run-in-cluster';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,4 +14,4 @@ async function bootstrap() {
   const PORT = configService.get('PORT');
   await app.listen(PORT);
 }
-bootstrap();
+process.env.NODE_ENV === 'production' ? runInCluster(bootstrap) : bootstrap();
