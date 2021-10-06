@@ -15,6 +15,7 @@ import { CommentsModule } from './comments/comments.module';
 import { ProductsModule } from './products/products.module';
 import { ProductCategoriesModule } from './product-categories/product-categories.module';
 import { EmailModule } from './email/email.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -71,6 +72,7 @@ import { EmailModule } from './email/email.module';
     ProductsModule,
     ProductCategoriesModule,
     EmailModule,
+    ChatModule,
   ],
   controllers: [],
   providers: [],
