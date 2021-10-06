@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 import * as Joi from '@hapi/joi';
 import { PostsModule } from './posts/posts.module';
 import { DatabaseModule } from './database/database.module';
@@ -13,10 +14,10 @@ import { SubscribersModule } from './subscribers/subscribers.module';
 import { CommentsModule } from './comments/comments.module';
 import { ProductsModule } from './products/products.module';
 import { ProductCategoriesModule } from './product-categories/product-categories.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
-    PostsModule,
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         // NODE_ENV: Joi.string().required(),
@@ -43,6 +44,9 @@ import { ProductCategoriesModule } from './product-categories/product-categories
         RABBITMQ_QUEUE_NAME: Joi.string().required(),
         REDIS_HOST: Joi.string().required(),
         REDIS_PORT: Joi.number().required(),
+        EMAIL_SERVICE: Joi.string().required(),
+        EMAIL_USER: Joi.string().required(),
+        EMAIL_PASSWORD: Joi.string().required(),
       }),
     }),
     AwsModule.forRootAsync({
@@ -54,6 +58,8 @@ import { ProductCategoriesModule } from './product-categories/product-categories
         secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
       }),
     }),
+    ScheduleModule.forRoot(),
+    PostsModule,
     DatabaseModule,
     UsersModule,
     AuthenticationModule,
@@ -64,6 +70,7 @@ import { ProductCategoriesModule } from './product-categories/product-categories
     CommentsModule,
     ProductsModule,
     ProductCategoriesModule,
+    EmailModule,
   ],
   controllers: [],
   providers: [],
