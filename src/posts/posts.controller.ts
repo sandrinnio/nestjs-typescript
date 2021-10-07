@@ -16,7 +16,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostsService } from './posts.service';
 import JwtAuthenticationGuard from '../authentication/guards/jwt-authentication.guard';
-import { CurrentUser } from '../authentication/current-user.decorator';
+import { CurrentUser } from '../authentication/customs/current-user.decorator';
 import User from '../users/entities/user.entity';
 import { PaginationParams } from '../utils';
 import { HttpCacheInterceptor } from '../utils/interceptors/http-cache.interceptor';

@@ -23,6 +23,10 @@ export class UsersService {
     return this.usersRepository.getById(userId);
   }
 
+  getByIds(ids: string[]) {
+    return this.usersRepository.getByIds(ids);
+  }
+
   getByEmail(email: string) {
     return this.usersRepository.getByEmail(email);
   }

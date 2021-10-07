@@ -16,12 +16,15 @@ import { ProductsModule } from './products/products.module';
 import { ProductCategoriesModule } from './product-categories/product-categories.module';
 import { EmailModule } from './email/email.module';
 import { ChatModule } from './chat/chat.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { join } from 'path';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       validationSchema: Joi.object({
         // NODE_ENV: Joi.string().required(),
+        PORT: Joi.number(),
         POSTGRES_HOST: Joi.string().required(),
         POSTGRES_PORT: Joi.number().required(),
         POSTGRES_USER: Joi.string().required(),
@@ -35,7 +38,6 @@ import { ChatModule } from './chat/chat.module';
         AWS_ACCESS_KEY_ID: Joi.string().required(),
         AWS_SECRET_ACCESS_KEY: Joi.string().required(),
         AWS_PUBLIC_BUCKET_NAME: Joi.string().required(),
-        PORT: Joi.number(),
         ELASTICSEARCH_NODE: Joi.string().required(),
         ELASTICSEARCH_USERNAME: Joi.string().required(),
         ELASTICSEARCH_PASSWORD: Joi.string().required(),
@@ -58,6 +60,13 @@ import { ChatModule } from './chat/chat.module';
         accessKeyId: configService.get('AWS_ACCESS_KEY_ID'),
         secretAccessKey: configService.get('AWS_SECRET_ACCESS_KEY'),
       }),
+    }),
+    GraphQLModule.forRoot({
+      autoSchemaFile: join(__dirname, 'src/schema.gql'),
+      installSubscriptionHandlers: true,
+      buildSchemaOptions: {
+        dateScalarMode: 'timestamp',
+      },
     }),
     ScheduleModule.forRoot(),
     PostsModule,

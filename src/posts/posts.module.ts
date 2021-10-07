@@ -8,6 +8,9 @@ import PostsSearchService from './posts-search.service';
 import { PostsController } from './posts.controller';
 import { PostsRepository } from './posts.repository';
 import { PostsService } from './posts.service';
+import { PostsResolver } from './posts.resolver';
+import { PostsDataLoader } from './loaders/posts.loader';
+import { UsersModule } from '../users/users.module';
 
 @Module({
   imports: [
@@ -23,8 +26,15 @@ import { PostsService } from './posts.service';
       }),
     }),
     SearchModule,
+    UsersModule,
   ],
   controllers: [PostsController],
-  providers: [PostsService, PostsRepository, PostsSearchService],
+  providers: [
+    PostsService,
+    PostsRepository,
+    PostsSearchService,
+    PostsResolver,
+    PostsDataLoader,
+  ],
 })
 export class PostsModule {}

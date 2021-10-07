@@ -11,7 +11,7 @@ import { Request } from 'express';
 import User from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { AuthenticationService } from './authentication.service';
-import { CurrentUser } from './current-user.decorator';
+import { CurrentUser } from './customs/current-user.decorator';
 import { RegisterDto } from './dto/register.dto';
 import JwtAuthenticationGuard from './guards/jwt-authentication.guard';
 import { JwtRefreshGuard } from './guards/jwt-refresh.guard';

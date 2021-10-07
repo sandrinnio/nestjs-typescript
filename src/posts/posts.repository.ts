@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { In, MoreThan, Repository } from 'typeorm';
 import User from '../users/entities/user.entity';
 import { PaginationParams } from '../utils';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -14,15 +14,20 @@ export class PostsRepository {
     @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
   ) {}
 
-  getAllPosts(pagination: PaginationParams) {
-    const { offset, limit } = pagination;
-    return this.postsRepository.findAndCount({
+  async getAllPosts(pagination: PaginationParams) {
+    const { startId, offset, limit } = pagination;
+    const { query, count: postsCount } = await this.buildKeysetPaginationQuery(
+      startId,
+    );
+    const [items, count] = await this.postsRepository.findAndCount({
+      where: query,
       order: {
         id: 'ASC',
       },
       skip: offset,
       take: limit,
     });
+    return { items, count: startId ? postsCount : count };
   }
 
   async getPostById(id: string) {
@@ -65,5 +70,14 @@ export class PostsRepository {
     if (!deleteResponse.affected) {
       throw new PostNotFoundException(id);
     }
+  }
+
+  private async buildKeysetPaginationQuery(startId?: string) {
+    if (!startId) {
+      return {};
+    }
+    const query = { id: MoreThan(startId) };
+    const count = await this.postsRepository.count();
+    return { query, count };
   }
 }

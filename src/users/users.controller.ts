@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express, Response } from 'express';
-import { CurrentUser } from '../authentication/current-user.decorator';
+import { CurrentUser } from '../authentication/customs/current-user.decorator';
 import JwtAuthenticationGuard from '../authentication/guards/jwt-authentication.guard';
 import User from './entities/user.entity';
 import { UsersService } from './users.service';

@@ -30,17 +30,17 @@ class Post {
   author: User;
 
   @RelationId((post: Post) => post.author)
-  authorId?: string;
+  authorId: string;
 
   @ManyToMany(() => Category, (category: Category) => category.posts, {
     eager: true,
     cascade: true,
   })
   @JoinTable({ name: 'posts_categories' })
-  categories?: Category[];
+  categories: Category[];
 
   @OneToMany(() => Comment, (comment: Comment) => comment.post, { eager: true })
-  comments?: Comment[];
+  comments: Comment[];
 }
 
 export default Post;

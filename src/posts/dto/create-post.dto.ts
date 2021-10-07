@@ -11,5 +11,5 @@ export class CreatePostDto {
 
   @IsString({ each: true })
   @IsOptional()
-  keywords: string[];
+  keywords?: string[];
 }

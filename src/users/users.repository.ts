@@ -1,6 +1,11 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QueryRunner, Repository } from 'typeorm';
+import { In, QueryRunner, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from './dto/create-user.dto';
 import User from './entities/user.entity';
@@ -14,12 +19,17 @@ export class UsersRepository {
   async getById(id: string) {
     const user = await this.usersRepository.findOne({ id });
     if (!user) {
-      throw new HttpException(
-        'User with this id does not exist',
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException('User with this id does not exist');
     }
     return user;
+  }
+
+  async getByIds(ids: string[]) {
+    const users = await this.usersRepository.find({ where: { id: In(ids) } });
+    if (!users.length) {
+      throw new NotFoundException();
+    }
+    return users;
   }
 
   async getByEmail(email: string) {

@@ -3,7 +3,7 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { CreateCommentCommand } from './commands/implementations/create-comment.command';
 import JwtAuthenticationGuard from '../authentication/guards/jwt-authentication.guard';
-import { CurrentUser } from '../authentication/current-user.decorator';
+import { CurrentUser } from '../authentication/customs/current-user.decorator';
 import User from '../users/entities/user.entity';
 import { GetCommentsDto } from './dto/get-comments.dto';
 import { GetCommentsQuery } from './queries/implementations/get-comments.query';
