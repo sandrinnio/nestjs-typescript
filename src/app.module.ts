@@ -18,6 +18,7 @@ import { EmailModule } from './email/email.module';
 import { ChatModule } from './chat/chat.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { join } from 'path';
+import { PubSubModule } from './pub-sub/pub-sub.module';
 
 @Module({
   imports: [
@@ -82,6 +83,7 @@ import { join } from 'path';
     ProductCategoriesModule,
     EmailModule,
     ChatModule,
+    PubSubModule,
   ],
   controllers: [],
   providers: [],
