@@ -59,12 +59,24 @@ export class UsersRepository {
     });
   }
 
+  setTwoFactorAuthenticationSecret(secret: string, id: string) {
+    return this.usersRepository.update(id, {
+      twoFactorAuthenticationSecret: secret,
+    });
+  }
+
   async addAvatar(user: User, avatar: { key: string; url: string }) {
     await this.usersRepository.update(user.id, { ...user, avatar });
   }
 
   deleteAvatarWithQueryRunner(userId: string, queryRunner: QueryRunner) {
     return queryRunner.manager.update(User, userId, { avatar: null });
+  }
+
+  turnOnTwoFactorAuthentication(id: string) {
+    return this.usersRepository.update(id, {
+      isTwoFactorAuthenticationEnabled: true,
+    });
   }
 
   removeJwtRefreshToken(userId: string) {

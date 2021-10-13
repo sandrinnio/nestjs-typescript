@@ -33,6 +33,13 @@ class User {
   @Exclude()
   currentHashedRefreshToken?: string;
 
+  @Column({ nullable: true })
+  @Exclude()
+  twoFactorAuthenticationSecret?: string;
+
+  @Column({ default: false })
+  isTwoFactorAuthenticationEnabled: boolean;
+
   @OneToOne(() => Address, { eager: true, cascade: true })
   @JoinColumn({ name: 'address_id', referencedColumnName: 'id' })
   address: Address;

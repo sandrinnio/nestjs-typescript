@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
@@ -7,6 +8,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   RelationId,
+  UpdateDateColumn,
 } from 'typeorm';
 import Category from '../../categories/entities/category.entity';
 import Comment from '../../comments/entities/comment.entity';
@@ -41,6 +43,12 @@ class Post {
 
   @OneToMany(() => Comment, (comment: Comment) => comment.post, { eager: true })
   comments: Comment[];
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 }
 
 export default Post;

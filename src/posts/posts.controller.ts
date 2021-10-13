@@ -15,11 +15,11 @@ import {
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { PostsService } from './posts.service';
-import JwtAuthenticationGuard from '../authentication/guards/jwt-authentication.guard';
 import { CurrentUser } from '../authentication/customs/current-user.decorator';
 import User from '../users/entities/user.entity';
 import { PaginationParams } from '../utils';
 import { HttpCacheInterceptor } from '../utils/interceptors/http-cache.interceptor';
+import JwtTwoFactorGuard from '../authentication/guards/jwt-two-factor-authentication.guard';
 
 @Controller('posts')
 export class PostsController {
@@ -53,7 +53,7 @@ export class PostsController {
   }
 
   @Post()
-  @UseGuards(JwtAuthenticationGuard)
+  @UseGuards(JwtTwoFactorGuard)
   createPost(@Body() post: CreatePostDto, @CurrentUser() user: User) {
     return this.postsService.createPost(post, user);
   }

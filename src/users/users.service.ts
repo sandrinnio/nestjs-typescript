@@ -70,6 +70,10 @@ export class UsersService {
     return this.usersRepository.setJwtRefreshToken(userId, token);
   }
 
+  setTwoFactorAuthenticationSecret(secret: string, id: string) {
+    return this.usersRepository.setTwoFactorAuthenticationSecret(secret, id);
+  }
+
   addPrivateFile(user: User, fileBuffer: Buffer, filename: string) {
     return this.filesService.uploadPrivateFile(fileBuffer, user, filename);
   }
@@ -110,6 +114,10 @@ export class UsersService {
     } finally {
       await queryRunner.release();
     }
+  }
+
+  turnOnTwoFactorAuthentication(id: string) {
+    return this.usersRepository.turnOnTwoFactorAuthentication(id);
   }
 
   removeJwtRefreshToken(userId: string) {

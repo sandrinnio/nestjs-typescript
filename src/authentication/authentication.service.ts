@@ -6,6 +6,7 @@ import { PostgresErrorCode } from '../database/enums/postgres-error-codes.enum';
 import { UsersService } from '../users/users.service';
 import { RegisterDto } from './dto/register.dto';
 import { TokenPayload } from './interfaces/token-payload.interface';
+import { ITwoFactorAuthenticate } from './interfaces/two-factor-authenticate.interface';
 
 @Injectable()
 export class AuthenticationService {
@@ -21,8 +22,15 @@ export class AuthenticationService {
     return user;
   }
 
-  getCookieWithJwtToken(userId: string) {
-    const payload: TokenPayload = { userId };
+  getCookieWithJwtToken(
+    userId: string,
+    twoFactorOptions?: ITwoFactorAuthenticate,
+  ) {
+    const payload: TokenPayload = {
+      userId,
+      isSecondFactorAuthenticated:
+        twoFactorOptions?.isSecondFactorAuthenticated,
+    };
     const token = this.jwtService.sign(payload, {
       secret: this.configService.get('JWT_ACCESS_TOKEN_SECRET'),
       expiresIn: `${this.configService.get(
